@@ -28,8 +28,8 @@ services:
     depends_on:
       - mysql
     build:
-      context: ../../
-      dockerfile: ./_environment/dev/docker/asterisk/Dockerfile
+      context: ./
+      dockerfile: ./docker/asterisk/Dockerfile
     image: asterisk
     container_name: asterisk-location-a
     environment:
@@ -37,7 +37,7 @@ services:
       - ASTERISK_SERVER_HOSTNAME=asterisk-location-a
     network_mode: host
     volumes:
-      - ./asterisk-configs/asterisk-location-a/:/asterisk-configs/
+      - ./docker/asterisk/asterisk-location-a/asterisk-configs/:/asterisk-configs/
       - ./docker/asterisk/config/:/sync-config/
     cap_add:
       - ALL
@@ -53,7 +53,7 @@ services:
       - ASTERISK_SERVER_HOSTNAME=asterisk-location-b
     network_mode: host
     volumes:
-      - ./asterisk-configs/asterisk-location-b/:/asterisk-configs/
+      - ./docker/asterisk/asterisk-location-b/asterisk-configs/:/asterisk-configs/
       - ./docker/asterisk/config/:/sync-config/
     cap_add:
       - ALL
@@ -69,7 +69,7 @@ services:
       - ASTERISK_SERVER_HOSTNAME=asterisk-location-a-secondary
     network_mode: host
     volumes:
-      - ./asterisk-configs/asterisk-location-a-secondary/:/asterisk-configs/
+      - ./docker/asterisk/asterisk-location-a-secondary/asterisk-configs/:/asterisk-configs/
       - ./docker/asterisk/config/:/sync-config/
     cap_add:
       - ALL

@@ -26,10 +26,10 @@ RUN apt -yq --force-yes install \
 RUN mkdir -p /home/polycom
 
 ## copy executable to image
-COPY ./_environment/dev/docker/asterisk/build/init.sh /init.sh
-COPY ./_environment/dev/docker/asterisk/build/odbc/odbc.ini /etc/odbc.ini
-COPY ./_environment/dev/docker/asterisk/build/odbc/odbcinst.ini /etc/odbcinst.ini
-COPY ./_environment/dev/docker/asterisk/build/mysql-odbc-connector.sh /mysql-odbc-connector.sh
+COPY ./docker/asterisk/build/init.sh /init.sh
+COPY ./docker/asterisk/build/odbc/odbc.ini /etc/odbc.ini
+COPY ./docker/asterisk/build/odbc/odbcinst.ini /etc/odbcinst.ini
+COPY ./docker/asterisk/build/mysql-odbc-connector.sh /mysql-odbc-connector.sh
 
 # allow asterisk-configs to be mountable
 VOLUME "/asterisk-configs/"
