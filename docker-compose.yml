@@ -1,0 +1,75 @@
+version: "3"
+services:
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    env_file:
+      - ./env/mysql.env
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql/sql/:/docker-entrypoint-initdb.d
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    ports:
+      - "8080:8080"
+    links:
+      - mysql:devdb
+
+  # Due to NAT issues the asterisk container is on host network instead of default bridge network
+  # This means asterisk is essentially running on the docker host's network as opposed to the docker bridge network
+  # so port forwarding is not needed but it means asterisk is exposed and not isolated (network-wise) in same way as the
+  # other containers
+
+  asterisk-location-a:
+    depends_on:
+      - mysql
+    build:
+      context: ./
+      dockerfile: ./docker/asterisk/Dockerfile
+    image: asterisk
+    container_name: asterisk-location-a
+    environment:
+      - ASTERISK_SSH_PORT=2222
+      - ASTERISK_SERVER_HOSTNAME=asterisk-location-a
+    network_mode: host
+    volumes:
+      - ./docker/asterisk/asterisk-location-a/asterisk-configs/:/asterisk-configs/
+      - ./docker/asterisk/config/:/sync-config/
+    cap_add:
+      - ALL
+
+  asterisk-location-b:
+    depends_on:
+      - asterisk-location-a
+      - mysql
+    image: asterisk
+    container_name: asterisk-location-b
+    environment:
+      - ASTERISK_SSH_PORT=2223
+      - ASTERISK_SERVER_HOSTNAME=asterisk-location-b
+    network_mode: host
+    volumes:
+      - ./docker/asterisk/asterisk-location-b/asterisk-configs/:/asterisk-configs/
+      - ./docker/asterisk/config/:/sync-config/
+    cap_add:
+      - ALL
+
+  asterisk-location-a-secondary:
+    depends_on:
+      - asterisk-location-a
+      - mysql
+    image: asterisk
+    container_name: asterisk-location-a-secondary
+    environment:
+      - ASTERISK_SSH_PORT=2224
+      - ASTERISK_SERVER_HOSTNAME=asterisk-location-a-secondary
+    network_mode: host
+    volumes:
+      - ./docker/asterisk/asterisk-location-a-secondary/asterisk-configs/:/asterisk-configs/
+      - ./docker/asterisk/config/:/sync-config/
+    cap_add:
+      - ALL

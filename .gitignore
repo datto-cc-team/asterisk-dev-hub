@@ -1,0 +1,11 @@
+# PHPStorm
+*.iml
+.idea/
+
+/env/*.env
+
+### DO NOT IGNORE ###
+# https://stackoverflow.com/a/987162
+!.gitignore
+!README.md
+!.gitkeep
