@@ -4,8 +4,8 @@ services:
   mysql:
     image: mysql:5.7
     container_name: mysql
-    env_file:
-      - ./env/mysql.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=astricon2019
     ports:
       - "3306:3306"
     volumes:
@@ -39,8 +39,6 @@ services:
     volumes:
       - ./docker/asterisk/asterisk-location-a/asterisk-configs/:/asterisk-configs/
       - ./docker/asterisk/config/:/sync-config/
-    cap_add:
-      - ALL
 
   asterisk-location-b:
     depends_on:
@@ -55,8 +53,6 @@ services:
     volumes:
       - ./docker/asterisk/asterisk-location-b/asterisk-configs/:/asterisk-configs/
       - ./docker/asterisk/config/:/sync-config/
-    cap_add:
-      - ALL
 
   asterisk-location-a-secondary:
     depends_on:
@@ -71,5 +67,3 @@ services:
     volumes:
       - ./docker/asterisk/asterisk-location-a-secondary/asterisk-configs/:/asterisk-configs/
       - ./docker/asterisk/config/:/sync-config/
-    cap_add:
-      - ALL
