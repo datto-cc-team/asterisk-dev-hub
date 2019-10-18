@@ -7,15 +7,6 @@ if ($isRunning > 1) {
     exit;
 }
 
-// copy sshd_config to /etc/ssh/sshd_config (-f = force)
-exec('cp -f /phopo-config/sshd_config /etc/ssh/sshd_config');
-// edit copy of sshd_config to use PHONE_PORTAL_SSH_PORT environment variable (-i = in place)
-exec('sed -i "s/@@ASTERISK_SSH_PORT@@/$ASTERISK_SSH_PORT/g" /etc/ssh/sshd_config');
-
-// start sshd
-exec('service ssh stop');
-exec('service ssh start');
-
 /**
  * start asterisk
  *
@@ -27,8 +18,6 @@ exec('service ssh start');
  */
 sleep(5);
 exec('asterisk');
-//exec('service asterisk stop');
-//exec('service asterisk start');
 
 /**
  * watch files and dirs for changes
@@ -37,6 +26,23 @@ exec('asterisk');
  */
 echo 'starting watch loop' . PHP_EOL;
 while (true) {
+
+    // rsync agi scripts to the Asterisk AGI directory configured in asterisk.conf (aka "astagidir")
+    // https://wiki.asterisk.org/wiki/display/AST/Directory+and+File+Structure
+    $rsync = 'rsync -aEim --delete /service-cloud-agi/agi-bin/ /usr/share/asterisk/agi-bin/';
+    $result = exec($rsync);
+    if (!empty($result)) {
+        echo 'agi-bin/ changed' . PHP_EOL;
+    }
+
+    // ssl dir
+    $rsync = 'rsync -aEim --delete /phopo-shared/ssl/ /etc/asterisk/ssl/';
+    $result = exec($rsync);
+    if (!empty($result)) {
+        echo 'ssl config change, reload asterisk' . PHP_EOL;
+        exec('/usr/sbin/asterisk -rx reload');
+    }
+
     // watch for changes in asterisk-configs dir (excluding the ssl dir)
     $rsync = "rsync -aEim --delete --exclude 'ssl' /asterisk-configs/ /etc/asterisk/";
     $result = exec($rsync);
