@@ -29,7 +29,8 @@ COPY ./docker/asterisk/build/odbc/odbcinst.ini /etc/odbcinst.ini
 COPY ./docker/asterisk/build/mysql-odbc-connector.sh /mysql-odbc-connector.sh
 
 # allow asterisk-configs to be mountable
-VOLUME "/asterisk-configs/"
+VOLUME "/instance-configs/"
+VOLUME "/shared-configs/"
 
 # run script
 CMD ["./init.sh"]
