@@ -32,13 +32,10 @@ services:
       dockerfile: ./docker/asterisk/Dockerfile
     image: asterisk
     container_name: asterisk-location-a
-    environment:
-      - ASTERISK_SSH_PORT=2222
-      - ASTERISK_SERVER_HOSTNAME=asterisk-location-a
     network_mode: host
     volumes:
-      - ./docker/asterisk/asterisk-location-a/asterisk-configs/:/asterisk-configs/
-      - ./docker/asterisk/config/:/sync-config/
+      - ./instance/location-a/:/instance-configs/
+      - ./shared/:/shared-configs/
 
   asterisk-location-b:
     depends_on:
@@ -46,13 +43,10 @@ services:
       - mysql
     image: asterisk
     container_name: asterisk-location-b
-    environment:
-      - ASTERISK_SSH_PORT=2223
-      - ASTERISK_SERVER_HOSTNAME=asterisk-location-b
     network_mode: host
     volumes:
-      - ./docker/asterisk/asterisk-location-b/asterisk-configs/:/asterisk-configs/
-      - ./docker/asterisk/config/:/sync-config/
+      - ./instance/location-b/:/instance-configs/
+      - ./shared/:/shared-configs/
 
   asterisk-location-a-secondary:
     depends_on:
@@ -60,10 +54,7 @@ services:
       - mysql
     image: asterisk
     container_name: asterisk-location-a-secondary
-    environment:
-      - ASTERISK_SSH_PORT=2224
-      - ASTERISK_SERVER_HOSTNAME=asterisk-location-a-secondary
     network_mode: host
     volumes:
-      - ./docker/asterisk/asterisk-location-a-secondary/asterisk-configs/:/asterisk-configs/
-      - ./docker/asterisk/config/:/sync-config/
+      - ./instance/location-a-secondary/:/instance-configs/
+      - ./shared/:/shared-configs/

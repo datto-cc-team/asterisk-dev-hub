@@ -9,3 +9,4 @@
 !.gitignore
 !README.md
 !.gitkeep
+/shared/ssl/*
