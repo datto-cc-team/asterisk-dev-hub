@@ -11,13 +11,11 @@ if ($isRunning > 1) {
  * start asterisk
  *
  * odbc connection was not starting (despite setting "depends on" in docker-compose to force the db to start first)
- * adding a sleep of 5 seconds before starting asterisk solved this issue
- *
- * Sometime starting asterisk with service results in error "Starting Asterisk PBX: Unable to install capabilities."
- * Using command asterisk starts without errors.  If asterisk was already running, a warning is displayed.
+ * adding a sleep of 30 seconds before starting asterisk solved this issue
  */
-sleep(5);
-exec('asterisk');
+sleep(30);
+exec('service asterisk stop');
+exec('service asterisk start');
 
 /**
  * watch files and dirs for changes
@@ -51,7 +49,7 @@ while (true) {
     $rsync = 'rsync -aEim --delete /shared-configs/asterisk-configs/ /tmp/shared-asterisk-configs/';
     $result = exec($rsync);
     if (!empty($result)) {
-        echo 'shared asterisk configs changed';
+        echo 'shared asterisk configs changed' . PHP_EOL;
 
         // if something changed in the shared configs, rsync files to /etc/asterisk/
         exec("rsync -aEim --delete --exclude 'ssl' /tmp/shared-asterisk-configs/ /etc/asterisk/");

@@ -35,6 +35,7 @@ services:
     network_mode: host
     volumes:
       - ./instance/location-a/:/instance-configs/
+      - ./instance/location-a/asterisk-logs/:/var/log/asterisk/
       - ./shared/:/shared-configs/
 
   asterisk-location-b:
@@ -46,6 +47,7 @@ services:
     network_mode: host
     volumes:
       - ./instance/location-b/:/instance-configs/
+      - ./instance/location-b/asterisk-logs/:/var/log/asterisk/
       - ./shared/:/shared-configs/
 
   asterisk-location-a-secondary:
@@ -57,4 +59,5 @@ services:
     network_mode: host
     volumes:
       - ./instance/location-a-secondary/:/instance-configs/
+      - ./instance/location-a-secondary/asterisk-logs/:/var/log/asterisk/
       - ./shared/:/shared-configs/
